@@ -1,6 +1,6 @@
 ﻿namespace ProjectManagement.HealthChecksDashboard.Abstractions;
 
-public interface IHealthCheckService
+public interface IHealthChecksService
 {
     Task CheckHealthAsync();
 }

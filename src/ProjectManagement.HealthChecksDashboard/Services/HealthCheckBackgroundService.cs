@@ -24,7 +24,7 @@ public class HealthCheckBackgroundService : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             using IServiceScope scope = _services.CreateScope();
-            IHealthCheckService healthCheckService = scope.ServiceProvider.GetRequiredService<IHealthCheckService>();
+            IHealthChecksService healthCheckService = scope.ServiceProvider.GetRequiredService<IHealthChecksService>();
             _logger.LogInformation("Checking health...");
             await healthCheckService.CheckHealthAsync();
             await Task.Delay(TimeSpan.FromSeconds(_healthCheckOptions.IntervalInSeconds), stoppingToken);

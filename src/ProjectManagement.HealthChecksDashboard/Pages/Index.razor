@@ -1,7 +1,53 @@
 ﻿@page "/"
+@using ProjectManagement.HealthChecksDashboard.Models
+@using ProjectManagement.HealthChecksDashboard.Abstractions
+@inject IHealthRecordService HealthRecordService
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if (_records == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Client Name</th>
+            <th>Status</th>
+            <th>Database</th>
+            <th>Liveness</th>
+            <th>Readiness</th>
+            <th>Last Check</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (HealthRecordModel record in _records)
+        {
+            <tr>
+                <td>@record.ClientName</td>
+                <td>@record.Response?.Status</td>
+                <td>@record.Response?.Database?.Status</td>
+                <td>@record.Response?.Liveness?.LivenessState</td>
+                <td>@record.Response?.Readiness?.ReadinessState</td>
+                <td>@record.CreatedAt</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private HealthRecordModel[]? _records;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _records = await HealthRecordService.GetHealthRecordsAsync();
+    }
+
+}

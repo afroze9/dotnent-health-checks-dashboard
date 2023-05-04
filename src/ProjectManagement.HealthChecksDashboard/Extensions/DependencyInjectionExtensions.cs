@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.HealthChecksDashboard.Abstractions;
 using ProjectManagement.HealthChecksDashboard.Configuration;
 using ProjectManagement.HealthChecksDashboard.Data;
@@ -12,7 +13,7 @@ public static class DependencyInjectionExtensions
     private static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<HealthCheckOptions>(configuration.GetSection("HealthCheck"));
-        services.AddScoped<IHealthCheckService, HealthCheckService>();
+        services.AddScoped<IHealthChecksService, HealthChecksService>();
         services.AddHostedService<HealthCheckBackgroundService>();
     }
     
@@ -22,8 +23,12 @@ public static class DependencyInjectionExtensions
         services.AddHealthChecks(configuration);
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        services.AddSingleton<WeatherForecastService>();
 
+        services.AddScoped<IHealthRecordService, HealthRecordService>();
+
+        services.AddDbContext<ApplicationDbContext>(options => { options.UseInMemoryDatabase("HealthCheckDb"); });
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
