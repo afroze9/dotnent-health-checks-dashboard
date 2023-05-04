@@ -1,8 +1,10 @@
 ﻿namespace ProjectManagement.HealthChecksDashboard.Configuration;
 
-public class HealthCheckSettings
+public class HealthCheckOptions
 {
-    public HealthCheckClient[] Clients { get; set; } = Array.Empty<HealthCheckClient>();
+    public HealthCheckClient[] Clients { get; set; }
+
+    public int IntervalInSeconds { get; set; }
 }
 
 public class HealthCheckClient
