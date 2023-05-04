@@ -1,0 +1,21 @@
+{
+  "SerilogSettings": {
+    "ElasticSearchSettings": {
+      "Uri": "https://localhost:9200",
+      "Username": "elastic",
+      "Password": "dev123",
+      "IndexFormat": "logs-project-api-{0:yyyy.MM}"
+    }
+  },
+  "Consul": {
+    "Token": "bc3f22ce-9948-a224-3af8-560129e73cc5",
+    "Discovery": {
+      "ServiceName": "health-checks-dashboard",
+      "Scheme": "https",
+      "Retry": {
+        "Enabled": true,
+        "MaxAttempts": 5
+      }
+    }
+  }
+}
