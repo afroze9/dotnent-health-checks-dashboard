@@ -3,6 +3,7 @@ using ProjectManagement.HealthChecksDashboard.Abstractions;
 using ProjectManagement.HealthChecksDashboard.Configuration;
 using ProjectManagement.HealthChecksDashboard.Data;
 using ProjectManagement.HealthChecksDashboard.Services;
+using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 
 namespace ProjectManagement.HealthChecksDashboard.Extensions;
@@ -10,6 +11,24 @@ namespace ProjectManagement.HealthChecksDashboard.Extensions;
 [ExcludeFromCodeCoverage]
 public static class DependencyInjectionExtensions
 {
+    private static void AddConsulDiscovery(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDiscoveryClient(configuration);
+
+        services.AddHttpContextAccessor();
+        services
+            .AddHttpClient("healthchecks")
+            .AddServiceDiscovery()
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ClientCertificateOptions = ClientCertificateOption.Manual,
+                    ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
+                };
+            });
+    }
+    
     private static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<HealthCheckOptions>(configuration.GetSection("HealthCheck"));
@@ -19,7 +38,7 @@ public static class DependencyInjectionExtensions
     
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDiscoveryClient(configuration);
+        services.AddConsulDiscovery(configuration);
         services.AddHealthChecks(configuration);
         services.AddRazorPages();
         services.AddServerSideBlazor();
