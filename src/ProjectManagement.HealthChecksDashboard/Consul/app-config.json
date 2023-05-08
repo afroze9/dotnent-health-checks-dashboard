@@ -8,7 +8,7 @@
     }
   },
   "Consul": {
-    "Token": "44531052-d33f-ca66-8053-10edde942f02",
+    "Token": "d61c9df3-5a63-7d46-e633-5fdde8eab280",
     "Discovery": {
       "ServiceName": "health-checks-dashboard",
       "Scheme": "https",
@@ -23,11 +23,15 @@
     "Clients": [
       {
         "Name": "Company API",
-        "Url": "https://localhost:5031/actuator/health"
+        "Url": "http://company-api/actuator/health"
       },
       {
         "Name": "Project API",
-        "Url": "https://localhost:5041/actuator/health"
+        "Url": "http://project-api/actuator/health"
+      },
+      {
+        "Name": "API Gateway",
+        "Url": "http://api-gateway/actuator/health"
       }
     ]
   }

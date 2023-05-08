@@ -54,6 +54,9 @@ echo "Token: $secret_id"
 $body = Get-Content -Raw -Path "app-config.json" | ConvertFrom-Json
 $body.Consul.Token = $secret_id
 $body.SerilogSettings.ElasticSearchSettings.Uri = "https://es01:9200"
+$body.HealthCheck.Clients | where { $_.Name -eq "Company API" } | foreach { $_.Url = "http://company-api/actuator/health" }
+$body.HealthCheck.Clients | where { $_.Name -eq "Project API" } | foreach { $_.Url = "http://project-api/actuator/health" }
+$body.HealthCheck.Clients | where { $_.Name -eq "API Gateway" } | foreach { $_.Url = "http://api-gateway/actuator/health" }
 $body | ConvertTo-Json -Depth 10 | Set-Content -Path "app-config.json"
 
 $body = Get-Content -Raw -Path "app-config.json"
